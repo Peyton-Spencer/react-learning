@@ -10,6 +10,13 @@ function Square(props) {
     )
 }
 
+function SimpleButton(props) {
+    return (
+        <button className="status" onClick={props.onClick}>
+            {props.text}
+        </button>
+    )
+}
 class Board extends React.Component {
     renderSquare(i) {
         return (
@@ -57,7 +64,7 @@ class Game extends React.Component {
 
     handleClick(i) {
         //slice history to remove the incorrect "future history" if we go back in time
-        const history = this.state.history.slice(0, this.state.stepNumber +1);
+        const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
         //triggers only if winner or squares is NOT null
@@ -76,6 +83,16 @@ class Game extends React.Component {
         });
     }
 
+    resetGame() {
+        this.setState({
+            history: [{
+                squares: Array(9).fill(null),
+            }],
+            stepNumber: 0,
+            xIsNext: true,
+        });
+    }
+    
     jumpTo(step) {
         this.setState({
             stepNumber: step,
@@ -121,6 +138,10 @@ class Game extends React.Component {
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
+                    <SimpleButton 
+                        text = "Reset the game"
+                        onClick={() => this.resetGame()}
+                    />
                     <ol>{moves}</ol>
                 </div>
             </div>
