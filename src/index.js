@@ -109,7 +109,7 @@ class Game extends React.Component {
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber]; //grab the current board state
-        const winner = calculateWinner(current.squares);
+        const winner = calculateWinner(history[history.length-1].squares);
         //step = current history element value (don't care about it)
         //moveNumber = current history element index
         const moves = history.map((step, moveNumber) => {
