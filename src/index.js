@@ -56,6 +56,8 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null),
+                mRow: 0,
+                mCol: 0, //location of each move
             }],
             stepNumber: 0,
             xIsNext: true,
@@ -77,6 +79,8 @@ class Game extends React.Component {
             //concat this move to the sliced history
             history: history.concat([{
                 squares: squares,
+                mRow: (i - (i % 3))/3,
+                mCol: i % 3,                
             }]),
             xIsNext: !this.state.xIsNext,
             stepNumber: history.length,
@@ -87,6 +91,8 @@ class Game extends React.Component {
         this.setState({
             history: [{
                 squares: Array(9).fill(null),
+                mCol: 0,
+                mRow: 0,
             }],
             stepNumber: 0,
             xIsNext: true,
@@ -107,8 +113,11 @@ class Game extends React.Component {
         //step = current history element value (don't care about it)
         //moveNumber = current history element index
         const moves = history.map((step, moveNumber) => {
+            const row = history[moveNumber].mRow;
+            const col = history[moveNumber].mCol;
             const desc = moveNumber ?
-                'Go to move #' + moveNumber :
+                'move #' + moveNumber + 
+                '   (' + row + ', ' + col + ')' :
                 'Go to game start';
             return (
                 <li key={moveNumber}>
