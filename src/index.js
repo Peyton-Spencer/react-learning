@@ -12,7 +12,7 @@ function Square(props) {
 
 function SimpleButton(props) {
     return (
-        <button className="status" onClick={props.onClick}>
+        <button className={props.className} onClick={props.onClick}>
             {props.text}
         </button>
     )
@@ -79,8 +79,8 @@ class Game extends React.Component {
             //concat this move to the sliced history
             history: history.concat([{
                 squares: squares,
-                mRow: (i - (i % 3))/3,
-                mCol: i % 3,                
+                mRow: (i - (i % 3)) / 3,
+                mCol: i % 3,
             }]),
             xIsNext: !this.state.xIsNext,
             stepNumber: history.length,
@@ -98,8 +98,9 @@ class Game extends React.Component {
             xIsNext: true,
         });
     }
-    
+
     jumpTo(step) {
+        //Bold the selected move item
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0,
@@ -109,23 +110,26 @@ class Game extends React.Component {
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber]; //grab the current board state
-        const winner = calculateWinner(history[history.length-1].squares);
+        const winner = calculateWinner(history[history.length - 1].squares);
+
+        //Move history list
         //step = current history element value (don't care about it)
         //moveNumber = current history element index
-        const moves = history.map((step, moveNumber) => {
+        const mList = history.map((step, moveNumber) => {
             const row = history[moveNumber].mRow;
             const col = history[moveNumber].mCol;
             const desc = moveNumber ?
-                'move #' + moveNumber + 
+                'move #' + moveNumber +
                 '   (' + row + ', ' + col + ')' :
                 'Go to game start';
             return (
                 <li key={moveNumber}>
-                    <button
+                    <SimpleButton
+                        //CSS logic to bold the selected move
+                        className={moveNumber === this.state.stepNumber ? "button-bold" : "button"}
+                        text={desc}
                         onClick={() => this.jumpTo(moveNumber)}
-                    >
-                        {desc}
-                    </button>
+                    />
                 </li>
             );
         });
@@ -147,11 +151,11 @@ class Game extends React.Component {
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <SimpleButton 
-                        text = "Reset the game"
+                    <SimpleButton
+                        text="Reset the game"
                         onClick={() => this.resetGame()}
                     />
-                    <ol>{moves}</ol>
+                    <ol>{mList}</ol>
                 </div>
             </div>
         );
