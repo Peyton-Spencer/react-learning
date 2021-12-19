@@ -111,27 +111,37 @@ class Game extends React.Component {
         const current = history[this.state.stepNumber]; //grab the current board state
         const winner = calculateWinner(history[history.length - 1].squares);
 
-        //Move history list
-        //step = current history element value (don't care about it)
-        //moveNumber = current history element index
-        const mList = history.map((step, moveNumber) => {
-            const row = history[moveNumber].mRow;
-            const col = history[moveNumber].mCol;
-            const desc = moveNumber ?
-                'move #' + moveNumber +
-                '   (' + row + ', ' + col + ')' :
-                'Go to game start';
-            return (
-                <li key={moveNumber}>
-                    <SimpleButton
-                        //CSS logic to bold the selected move
-                        className={moveNumber === this.state.stepNumber ? "button-bold" : "button"}
-                        text={desc}
-                        onClick={() => this.jumpTo(moveNumber)}
-                    />
-                </li>
-            );
-        });
+
+        let mList;
+        //stepnumber = 0 means null game board (game hasn't started)
+        if (this.state.stepNumber === 0) { mList = <div></div> }
+        else { //Only render list if the game has started! (moveNumber > 0)
+            //mList = Move history list
+            //step = current history element value (don't care about it)
+            //moveNumber = current history element index (0 = null board)
+            mList = history.map((step, moveNumber) => {
+                if (moveNumber < history.length - 1) {
+                    moveNumber++; //skip moveNumber 0 (the null board)
+                    const row = history[moveNumber].mRow;
+                    const col = history[moveNumber].mCol;
+                    const desc =
+                        ((moveNumber % 2) === 0 ? 'O' : 'X') +
+                        ' at   (' + row + ', ' + col + ')';
+                    return (
+                        <li key={moveNumber}>
+                            <SimpleButton
+                                //CSS logic to bold the selected move
+                                className={(moveNumber) === this.state.stepNumber ? "button-bold" : "button"}
+                                text={desc}
+                                onClick={() => this.jumpTo(moveNumber)}
+                            />
+                        </li>
+                    );
+                } else {
+                    return;
+                }
+            });
+        }
 
         let status;
         if (winner) {
