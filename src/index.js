@@ -114,7 +114,7 @@ class Game extends React.Component {
 
         let mList;
         //stepnumber = 0 means null game board (game hasn't started)
-        if (this.state.stepNumber === 0) { mList = <div></div> }
+        if (this.state.stepNumber === 0) { mList = null }
         else { //Only render list if the game has started! (moveNumber > 0)
             //mList = Move history list
             //step = current history element value (don't care about it)
