@@ -28,24 +28,23 @@ class Board extends React.Component {
     }
 
     render() {
+        //build the board array before returning
+        let boardSquares = []; //init empty board array
+        for (let row = 0; row < 3; row++) {
+            let boardRow = []; //init empty row array
+            for (let col = 0; col < 3; col++) {
+                let i = (row * 3) + col;
+                //span is a tag used as INLINE container to mark up part of text
+                //div would have added carriage return, resulting in one column of squares 
+                boardRow.push(<span key={i}>{this.renderSquare(i)}</span>);
+            }
+            //note concat returns new array without modifying
+            //push adds new element to array and returns the length
+            boardSquares = boardSquares.concat(<div className="board-row" key={row}>{boardRow}</div>);
+        }
+
         return (
-            <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
-            </div>
+            <div>{boardSquares}</div>
         );
     }
 }
@@ -76,7 +75,7 @@ class Game extends React.Component {
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
         this.setState({
-            //concat this move to the sliced history
+            //add this move to the sliced history
             history: history.concat([{
                 squares: squares,
                 mRow: (i - (i % 3)) / 3,
